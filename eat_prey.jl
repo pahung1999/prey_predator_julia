@@ -13,7 +13,7 @@ end
 #Ăn con mồi
 function eat_prey!(agent,prey, model)
 	params=model.params
-    if agent.species == :tiger && prey.species == :leopard
+    if prey.species == :leopard
         if agent.energy < 0.3 && rand(Uniform(0, 1)) < params.fight_prob
             consumption = min(
 				prey.energy,

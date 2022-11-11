@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.13
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -33,7 +33,7 @@ using Distributions
 
 const LIST_SPECIES= (:tiger, :leopard, :boar)
 
-const DEFAULT_MAX_ENERGY= Dict(:tiger => 1.0,  :boar => 0.6,  :leopard => 0.8) 
+const DEFAULT_MAX_ENERGY= Dict(:tiger => 5.0,  :boar => 5.6,  :leopard => 5.8) 
 const DEFAULT_ENERGY_TRANSFERT = Dict(:tiger => 0.5,  :boar => 0.15,  :leopard => 0.4)
 const DEFAULT_REPRODUCE_PROBA= Dict(:tiger => 0.005,  :boar => 0.01,  :leopard => 0.005)
 const DEFAULT_REPRODUCE_ENERGY= Dict(:tiger => 0.5,  :boar => 0.3,  :leopard => 0.4)
@@ -44,6 +44,7 @@ const DEFAULT_LIFESPAN = Dict(:tiger => 15 * 365,  :boar => 12 * 365,  :leopard 
 const DEFAULT_CATCH_PROB = Dict(:tiger => 0.3, :leopard => 0.5)
 
 @kwdef struct ModelParams
+	energy_consum::Dict{Symbol, Float16} = DEFAULT_ENERGY_CONSUME
 	max_energy::Dict{Symbol, Float16} = DEFAULT_MAX_ENERGY
 	proba_reproduce::Dict{Symbol, Float16} = DEFAULT_REPRODUCE_PROBA
 	max_offsprings::Dict{Symbol, Int16} = MAX_OFFSPRING
@@ -58,6 +59,7 @@ const DEFAULT_CATCH_PROB = Dict(:tiger => 0.3, :leopard => 0.5)
 	num_init_tiger::Int
 	num_init_boar::Int
 end
+
 
 @agent Animal GridAgent{2} begin
 	species::Symbol
@@ -103,6 +105,7 @@ function eat_prey!(agent,prey, model)
 		kill_agent!(prey,model)
 	end
 end
+
 #Hàm tạo loài
 function animal(id, pos, species; energy = rand(0:0.1:1), age = 0)
 	Animal(id, pos, species, DEFAULT_MAX_ENERGY[species], age)
@@ -163,7 +166,7 @@ function agent_step!(agent::Animal, model)
 	params = model.params
 	species = agent.species
 	#Move
-	agent.energy -= DEFAULT_ENERGY_CONSUME[species]
+	agent.energy = agent.energy - params.energy_consum[species]
 	if agent.energy <= 0
 		kill_agent!(agent, model)
 		return
@@ -277,67 +280,8 @@ TableOfContents()
 # ╔═╡ 8a24d382-ef91-47f2-8951-df8673951230
 md"# Setup model"
 
-# ╔═╡ 6bb340fa-ee07-4463-bbf9-81796b8fcb4f
-# ╠═╡ disabled = true
-#=╠═╡
-x = rand(-1:1, 10000)
-  ╠═╡ =#
-
 # ╔═╡ 5c520921-9c7a-4a15-8964-4458964c6069
 
-
-# ╔═╡ 749bf6b0-2199-4c87-9883-e4aaae6073f3
-# ╠═╡ disabled = true
-#=╠═╡
-@time xp1 = [x_i + 1 for x_i in x]
-  ╠═╡ =#
-
-# ╔═╡ 1877ff20-531c-4386-8973-fa6df64bc9fc
-# ╠═╡ disabled = true
-#=╠═╡
-@time xp1_lazy = (x_i + 1 for x_i in x)
-  ╠═╡ =#
-
-# ╔═╡ 041d088a-8fc9-47f3-a056-ebbe87e5ad41
-# ╠═╡ disabled = true
-#=╠═╡
-@btime sum(map(x -> x + 1, x))
-  ╠═╡ =#
-
-# ╔═╡ 9cbe79ea-9882-423a-b8cc-7f8ca389bec2
-# ╠═╡ disabled = true
-#=╠═╡
-using BenchmarkTools
-  ╠═╡ =#
-
-# ╔═╡ d070da1a-461e-4515-afeb-5e36b2707bae
-# ╠═╡ disabled = true
-#=╠═╡
-iter = Iterators.map(x -> x + 1, x)
-  ╠═╡ =#
-
-# ╔═╡ e3761634-8949-448f-9dd6-166a04ed44d3
-# ╠═╡ disabled = true
-#=╠═╡
-collect(iter)
-  ╠═╡ =#
-
-# ╔═╡ 8395f43b-3b6a-46c9-9277-bdaf1c5d0068
-# ╠═╡ disabled = true
-#=╠═╡
-collect(iter)
-  ╠═╡ =#
-
-# ╔═╡ 57f17763-1011-4bd0-a191-fc103731859b
-# ╠═╡ disabled = true
-#=╠═╡
-@btime sum(Iterators.map(x -> x + 1, x))
-  ╠═╡ =#
-
-# ╔═╡ c1d87af1-8cd6-427d-abed-c3a8baa8f01d
-#=╠═╡
-map(x -> x+1, x)
-  ╠═╡ =#
 
 # ╔═╡ 7c3b1346-ca28-4bc6-8d95-f5353a1df33a
 
@@ -351,9 +295,6 @@ function IsSpecies(s)
 		agent.species == s
 	end
 end
-
-# ╔═╡ f4a1d659-3855-4a2f-ad6d-9a3c94743cd3
-count([true, false])
 
 # ╔═╡ ceb9fee6-62c4-4f1d-90e7-a57d8d9de97a
 function healthy_food(model)
@@ -372,9 +313,6 @@ is_full(x) = x.energy == 1
 
 # ╔═╡ d20ea126-bf30-490f-87dc-9da40a8fd078
 # adata = [:species, :age, :pos, is_full]
-
-# ╔═╡ bd91baeb-2a16-4995-b597-88d03ab240c3
-
 
 # ╔═╡ dc1dfc49-3495-45f5-abf7-789b4ce8e946
 # model=let 
@@ -397,15 +335,8 @@ params = Model.ModelParams(
 		num_init_boar=200
 	)
 
-# ╔═╡ 768d6467-fc84-4439-8b4c-9aedb0ae495b
-# adata
-model, agent_step!, model_step! = Model.init_model(params)
-
 # ╔═╡ 274b43b8-6fb9-4e79-8539-3cc4258bb956
 abmvideo("./test_v1.mp4", model, agent_step! , model_step!; spf = 1, framerate = 30,frames = 200)
-
-# ╔═╡ 78d4b94f-22e9-4f4f-83ac-311759893219
-
 
 # ╔═╡ 4f2bbb75-8b54-4f58-a629-4ceb8903b2c1
 # CartesianIndices(model.food)
@@ -481,10 +412,30 @@ end
 # ╔═╡ 2acf8cff-5998-40f0-b9ce-d3f09dc00487
 count(is_tiger, collect(agents_in_position((1,1),model)))
 
+# ╔═╡ 78d4b94f-22e9-4f4f-83ac-311759893219
+model=let 
+	params = Model.ModelParams(
+		grid_size=(50, 50),
+		num_init_tiger=50,
+		num_init_boar=200
+	)
+	# adata
+	model, agent_step!, model_step! = Model.init_model(params)
+	adata, mdata = run!(model, agent_step!, model_step!, 100; adata=adata, mdata=[healthy_food])
+	# innerjoin(adata, mdata, on=:step)
+	# model
+	model
+end
+
+# ╔═╡ 768d6467-fc84-4439-8b4c-9aedb0ae495b
+# adata
+model, agent_step!, model_step! = Model.init_model(params)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
@@ -494,6 +445,7 @@ PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 Agents = "~5.5.0"
+BenchmarkTools = "~1.3.2"
 DataFrames = "~1.4.1"
 Distributions = "~0.25.76"
 GLMakie = "~0.6.13"
@@ -508,7 +460,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "03373a35ab414c3c5d77395544c33810fa43a808"
+project_hash = "9a7636718d2665dd24765af006b011f6b4623752"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -577,6 +529,12 @@ version = "1.0.1"
 
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
+
+[[deps.BenchmarkTools]]
+deps = ["JSON", "Logging", "Printf", "Profile", "Statistics", "UUIDs"]
+git-tree-sha1 = "d9a9701b899b30332bbcb3e1679c41cce81fb0e8"
+uuid = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+version = "1.3.2"
 
 [[deps.BitFlags]]
 git-tree-sha1 = "84259bb6172806304b9101094a7cc4bc6f56dbc6"
@@ -1549,6 +1507,10 @@ version = "2.1.2"
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
+[[deps.Profile]]
+deps = ["Printf"]
+uuid = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
+
 [[deps.ProgressMeter]]
 deps = ["Distributed", "Printf"]
 git-tree-sha1 = "d7a7aef8f8f2d537104f170139553b14dfe39fe9"
@@ -2054,13 +2016,11 @@ version = "3.5.0+0"
 # ╠═9a7ed791-b78a-4786-8b4c-67c425854e1e
 # ╠═635c4c0e-82fe-4f9e-a4a0-fca47d7ed3de
 # ╠═e7b3ff98-ad07-4def-8b75-015c34424dc4
-# ╠═f4a1d659-3855-4a2f-ad6d-9a3c94743cd3
 # ╠═ceb9fee6-62c4-4f1d-90e7-a57d8d9de97a
 # ╠═a935a079-83ea-4ba4-bfeb-36318e8cbbaa
 # ╠═4fa148d5-26cb-44e9-a2ff-a73638a19f0e
 # ╠═d20ea126-bf30-490f-87dc-9da40a8fd078
 # ╠═1b950142-cac6-4e15-8fc1-5add615e0365
-# ╠═bd91baeb-2a16-4995-b597-88d03ab240c3
 # ╠═dc1dfc49-3495-45f5-abf7-789b4ce8e946
 # ╠═768d6467-fc84-4439-8b4c-9aedb0ae495b
 # ╠═274b43b8-6fb9-4e79-8539-3cc4258bb956

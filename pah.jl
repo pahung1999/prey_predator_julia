@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.13
 
 using Markdown
 using InteractiveUtils
@@ -311,8 +311,8 @@ adata = [
 # ╔═╡ 4fa148d5-26cb-44e9-a2ff-a73638a19f0e
 is_full(x) = x.energy == 1
 
-# ╔═╡ d20ea126-bf30-490f-87dc-9da40a8fd078
-# adata = [:species, :age, :pos, is_full]
+# ╔═╡ c3b6f460-5b88-4c89-8520-d6b85db10bc5
+
 
 # ╔═╡ dc1dfc49-3495-45f5-abf7-789b4ce8e946
 # model=let 
@@ -335,8 +335,129 @@ params = Model.ModelParams(
 		num_init_boar=200
 	)
 
+# ╔═╡ d20ea126-bf30-490f-87dc-9da40a8fd078
+begin
+	using Colors
+	
+	# Agent coloring
+	struct AgentColor <: Function
+	    model::AgentBasedModel
+	end
+	
+	function (ac::AgentColor)(agent)
+	    x, y = agent.pos
+	    model = ac.model
+	    if isnan(model.food[x, y])
+	        RGBAf(0.0f0, 0.0f0, 0.0f0)
+	    elseif agent.age < model.params.lifespan[agent.species]
+	        RGBAf(0.0f0, 0.0f0, 1.0f0)
+	    else
+	        RGBAf(1.0f0, 0.0f0, 0.0f0)
+	    end
+	end
+	
+	# Agent marker
+	function agent_marker(agent)
+	    if agent.species==:tiger
+	        return :circle
+		end
+	    if agent.species==:leopard
+	        return :circle
+		end
+	    if agent.species== :boar
+	        return :utriangle
+		end
+	end
+	
+	# Model map
+	function model_heatarray(model)
+	    return model.food
+	end
+	
+	function video(videopath::String,
+	               crop,
+	               init_nb_bph,
+	               position,
+	               pr_eliminate0;
+	               seed,
+	               frames=2880,
+	               kwargs...)
+	    # @info "Video seed: $seed"
+	    model, agent_step!, model_step! = Model.init_model(params)
+	    return abm_video(videopath,
+	                     model,
+	                     agent_step!,
+	                     model_step!;
+	                     frames=frames,
+	                     framerate=24,
+	                     ac=ac(model),
+	                     am=am,
+	                     heatarray=heatarray,
+	                     heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
+	                                 colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
+	                                 colorrange=(0, 1)))
+	end
+	
+	const PLOT_AGENT_MARKERS = Dict(true => :circle, false => :utriangle)
+	const PLOT_MAP_COLOR = (nan_color=RGBA(1.0, 1.0, 0.0, 0.5),
+	                        colormap=[RGBA(0, 1.0, 0, i) for i in 0:0.01:1],
+	                        colorrange=(0, 1))
+	function get_plot_kwargs(model)
+	    return (frames=2880,
+	            framerate=24,
+	            ac=AgentColor(model),
+	            am=agent_marker,
+	            heatarray=model_heatarray,
+	            heatkwargs=PLOT_MAP_COLOR)
+	end
+	
+	
+end
+
+# ╔═╡ 768d6467-fc84-4439-8b4c-9aedb0ae495b
+begin
+	# adata
+	model, agent_step!, model_step! = Model.init_model(params)
+	steps=300
+	videopath="./test_v1.mp4"
+end
+
+# ╔═╡ 03939ca5-f9bd-412d-8cab-61f832c1047f
+
+abmvideo(videopath,
+model,
+agent_step!,
+model_step!;#
+frames=steps,
+framerate=5,
+ac=AgentColor(model),
+am=agent_marker,
+heatarray=model_heatarray,
+heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
+			colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
+			colorrange=(0, 1)))
+
+
+# ╔═╡ a4226d21-dc25-49ff-be15-bcd9af178b2f
+
+
 # ╔═╡ 274b43b8-6fb9-4e79-8539-3cc4258bb956
-abmvideo("./test_v1.mp4", model, agent_step! , model_step!; spf = 1, framerate = 30,frames = 200)
+# abmvideo("./test_v1.mp4", model, agent_step! , model_step!; spf = 1, framerate = 30,frames = 200)
+
+# ╔═╡ 78d4b94f-22e9-4f4f-83ac-311759893219
+# model=let 
+# 	params = Model.ModelParams(
+# 		grid_size=(50, 50),
+# 		num_init_tiger=50,
+# 		num_init_boar=200
+# 	)
+# 	# adata
+# 	model, agent_step!, model_step! = Model.init_model(params)
+# 	adata, mdata = run!(model, agent_step!, model_step!, 100; adata=adata, mdata=[healthy_food])
+# 	# innerjoin(adata, mdata, on=:step)
+# 	# model
+# 	model
+# end
 
 # ╔═╡ 4f2bbb75-8b54-4f58-a629-4ceb8903b2c1
 # CartesianIndices(model.food)
@@ -412,30 +533,11 @@ end
 # ╔═╡ 2acf8cff-5998-40f0-b9ce-d3f09dc00487
 count(is_tiger, collect(agents_in_position((1,1),model)))
 
-# ╔═╡ 78d4b94f-22e9-4f4f-83ac-311759893219
-model=let 
-	params = Model.ModelParams(
-		grid_size=(50, 50),
-		num_init_tiger=50,
-		num_init_boar=200
-	)
-	# adata
-	model, agent_step!, model_step! = Model.init_model(params)
-	adata, mdata = run!(model, agent_step!, model_step!, 100; adata=adata, mdata=[healthy_food])
-	# innerjoin(adata, mdata, on=:step)
-	# model
-	model
-end
-
-# ╔═╡ 768d6467-fc84-4439-8b4c-9aedb0ae495b
-# adata
-model, agent_step!, model_step! = Model.init_model(params)
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
@@ -444,14 +546,14 @@ PlutoLinks = "0ff47ea0-7a50-410d-8455-4348d5de0420"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
-Agents = "~5.5.0"
-BenchmarkTools = "~1.3.2"
-DataFrames = "~1.4.1"
-Distributions = "~0.25.76"
+Agents = "~5.6.1"
+Colors = "~0.12.8"
+DataFrames = "~1.4.3"
+Distributions = "~0.25.77"
 GLMakie = "~0.6.13"
 InteractiveDynamics = "~0.21.11"
-PlutoLinks = "~0.1.5"
-PlutoUI = "~0.7.46"
+PlutoLinks = "~0.1.6"
+PlutoUI = "~0.7.48"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -460,7 +562,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "9a7636718d2665dd24765af006b011f6b4623752"
+project_hash = "1f6bf284920436fec183b51a10fc4a1b0a4bc399"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -487,9 +589,9 @@ version = "3.4.0"
 
 [[deps.Agents]]
 deps = ["CSV", "DataFrames", "DataStructures", "Distributed", "Downloads", "Graphs", "JLD2", "LazyArtifacts", "LightOSM", "LinearAlgebra", "Pkg", "ProgressMeter", "Random", "Requires", "Scratch", "StatsBase"]
-git-tree-sha1 = "57d59935b1de23d6d09d40b55d415b241e272750"
+git-tree-sha1 = "bca31e610fededd0dbfa294df9ef9289068db56f"
 uuid = "46ada45e-f475-11e8-01d0-f70cc89e6671"
-version = "5.5.0"
+version = "5.6.1"
 
 [[deps.Animations]]
 deps = ["Colors"]
@@ -530,16 +632,10 @@ version = "1.0.1"
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
-[[deps.BenchmarkTools]]
-deps = ["JSON", "Logging", "Printf", "Profile", "Statistics", "UUIDs"]
-git-tree-sha1 = "d9a9701b899b30332bbcb3e1679c41cce81fb0e8"
-uuid = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
-version = "1.3.2"
-
 [[deps.BitFlags]]
-git-tree-sha1 = "84259bb6172806304b9101094a7cc4bc6f56dbc6"
+git-tree-sha1 = "629c6e4a7be8f427d268cebef2a5e3de6c50d462"
 uuid = "d1d4a3ce-64b1-5f1a-9ba4-7e7e69966f35"
-version = "0.1.5"
+version = "0.1.6"
 
 [[deps.Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -646,15 +742,15 @@ uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 version = "4.1.1"
 
 [[deps.DataAPI]]
-git-tree-sha1 = "46d2680e618f8abd007bce0c3026cb0c4a8f2032"
+git-tree-sha1 = "e08915633fcb3ea83bf9d6126292e5bc5c739922"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
-version = "1.12.0"
+version = "1.13.0"
 
 [[deps.DataFrames]]
 deps = ["Compat", "DataAPI", "Future", "InvertedIndices", "IteratorInterfaceExtensions", "LinearAlgebra", "Markdown", "Missings", "PooledArrays", "PrettyTables", "Printf", "REPL", "Random", "Reexport", "SnoopPrecompile", "SortingAlgorithms", "Statistics", "TableTraits", "Tables", "Unicode"]
-git-tree-sha1 = "5b93f1b47eec9b7194814e40542752418546679f"
+git-tree-sha1 = "0f44494fe4271cc966ac4fea524111bef63ba86c"
 uuid = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-version = "1.4.2"
+version = "1.4.3"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -689,9 +785,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[deps.Distributions]]
 deps = ["ChainRulesCore", "DensityInterface", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns", "Test"]
-git-tree-sha1 = "04db820ebcfc1e053bd8cbb8d8bccf0ff3ead3f7"
+git-tree-sha1 = "bee795cdeabc7601776abbd6b9aac2ca62429966"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.76"
+version = "0.25.77"
 
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
@@ -897,9 +993,9 @@ version = "1.0.2"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
-git-tree-sha1 = "a97d47758e933cd5fe5ea181d178936a9fc60427"
+git-tree-sha1 = "8c7e6b82abd41364b8ffe40ffc63b33e590c8722"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "1.5.1"
+version = "1.5.3"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
@@ -966,9 +1062,9 @@ version = "0.5.1"
 
 [[deps.InlineStrings]]
 deps = ["Parsers"]
-git-tree-sha1 = "a62189e59d33e1615feb7a48c0bea7c11e4dc61d"
+git-tree-sha1 = "b5081bd8a53eeb6a2ef956751343ab44543023fb"
 uuid = "842dd82b-1e85-43dc-bf29-5d0ee9dffc48"
-version = "1.3.0"
+version = "1.3.1"
 
 [[deps.IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1032,9 +1128,9 @@ version = "1.0.0"
 
 [[deps.JLD2]]
 deps = ["FileIO", "MacroTools", "Mmap", "OrderedCollections", "Pkg", "Printf", "Reexport", "TranscodingStreams", "UUIDs"]
-git-tree-sha1 = "1c3ff7416cb727ebf4bab0491a56a296d7b8cf1d"
+git-tree-sha1 = "7859af8179d90fb1d0352172e1bf5abef279dcf6"
 uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
-version = "0.4.25"
+version = "0.4.27"
 
 [[deps.JLLWrappers]]
 deps = ["Preferences"]
@@ -1331,9 +1427,9 @@ uuid = "76b6901f-8821-46bb-9129-841bc9cfe677"
 version = "0.0.5"
 
 [[deps.Observables]]
-git-tree-sha1 = "5a9ea4b9430d511980c01e9f7173739595bbd335"
+git-tree-sha1 = "6862738f9796b3edc1c09d0890afce4eca9e7e93"
 uuid = "510215fc-4207-5dde-b226-833fc4488ee2"
-version = "0.5.2"
+version = "0.5.4"
 
 [[deps.OffsetArrays]]
 deps = ["Adapt"]
@@ -1371,15 +1467,15 @@ version = "0.8.1+0"
 
 [[deps.OpenSSL]]
 deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
-git-tree-sha1 = "3c3c4a401d267b04942545b1e964a20279587fd7"
+git-tree-sha1 = "5628f092c6186a80484bfefdf89ff64efdaec552"
 uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
-version = "1.3.0"
+version = "1.3.1"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "e60321e3f2616584ff98f0a4f18d98ae6f89bbb3"
+git-tree-sha1 = "f6e9dba33f9f2c44e08a020b0caf6903be540004"
 uuid = "458c3c95-2e84-50aa-8efc-19380b2a3a95"
-version = "1.1.17+0"
+version = "1.1.19+0"
 
 [[deps.OpenSpecFun_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Pkg"]
@@ -1434,10 +1530,10 @@ uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 version = "0.12.3"
 
 [[deps.Parsers]]
-deps = ["Dates"]
-git-tree-sha1 = "6c01a9b494f6d2a9fc180a08b182fcb06f0958a0"
+deps = ["Dates", "SnoopPrecompile"]
+git-tree-sha1 = "cceb0257b662528ecdf0b4b4302eb00e767b38e7"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.4.2"
+version = "2.5.0"
 
 [[deps.Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1470,9 +1566,9 @@ version = "0.0.5"
 
 [[deps.PlutoLinks]]
 deps = ["FileWatching", "InteractiveUtils", "Markdown", "PlutoHooks", "Revise", "UUIDs"]
-git-tree-sha1 = "0e8bcc235ec8367a8e9648d48325ff00e4b0a545"
+git-tree-sha1 = "8f5fa7056e6dcfb23ac5211de38e6c03f6367794"
 uuid = "0ff47ea0-7a50-410d-8455-4348d5de0420"
-version = "0.1.5"
+version = "0.1.6"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
@@ -1498,18 +1594,14 @@ uuid = "21216c6a-2e73-6563-6e65-726566657250"
 version = "1.3.0"
 
 [[deps.PrettyTables]]
-deps = ["Crayons", "Formatting", "Markdown", "Reexport", "StringManipulation", "Tables"]
-git-tree-sha1 = "460d9e154365e058c4d886f6f7d6df5ffa1ea80e"
+deps = ["Crayons", "Formatting", "LaTeXStrings", "Markdown", "Reexport", "StringManipulation", "Tables"]
+git-tree-sha1 = "98ac42c9127667c2731072464fcfef9b819ce2fa"
 uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-version = "2.1.2"
+version = "2.2.0"
 
 [[deps.Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
-
-[[deps.Profile]]
-deps = ["Printf"]
-uuid = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
 
 [[deps.ProgressMeter]]
 deps = ["Distributed", "Printf"]
@@ -1589,9 +1681,9 @@ uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 version = "0.7.0"
 
 [[deps.SIMD]]
-git-tree-sha1 = "7dbc15af7ed5f751a82bf3ed37757adf76c32402"
+git-tree-sha1 = "bc12e315740f3a36a6db85fa2c0212a848bd239e"
 uuid = "fdea26ae-647d-5447-a871-4b548cad5224"
-version = "3.4.1"
+version = "3.4.2"
 
 [[deps.ScanByte]]
 deps = ["Libdl", "SIMD"]
@@ -2001,17 +2093,7 @@ version = "3.5.0+0"
 # ╠═b4e537e8-4fca-11ed-1ccf-635f335cf7f3
 # ╠═de1e8ab9-1069-4588-b3e7-e47b67f2cf78
 # ╟─8a24d382-ef91-47f2-8951-df8673951230
-# ╠═6bb340fa-ee07-4463-bbf9-81796b8fcb4f
 # ╠═5c520921-9c7a-4a15-8964-4458964c6069
-# ╠═749bf6b0-2199-4c87-9883-e4aaae6073f3
-# ╠═1877ff20-531c-4386-8973-fa6df64bc9fc
-# ╠═041d088a-8fc9-47f3-a056-ebbe87e5ad41
-# ╠═9cbe79ea-9882-423a-b8cc-7f8ca389bec2
-# ╠═d070da1a-461e-4515-afeb-5e36b2707bae
-# ╠═e3761634-8949-448f-9dd6-166a04ed44d3
-# ╠═8395f43b-3b6a-46c9-9277-bdaf1c5d0068
-# ╠═57f17763-1011-4bd0-a191-fc103731859b
-# ╠═c1d87af1-8cd6-427d-abed-c3a8baa8f01d
 # ╟─7c3b1346-ca28-4bc6-8d95-f5353a1df33a
 # ╠═9a7ed791-b78a-4786-8b4c-67c425854e1e
 # ╠═635c4c0e-82fe-4f9e-a4a0-fca47d7ed3de
@@ -2020,9 +2102,12 @@ version = "3.5.0+0"
 # ╠═a935a079-83ea-4ba4-bfeb-36318e8cbbaa
 # ╠═4fa148d5-26cb-44e9-a2ff-a73638a19f0e
 # ╠═d20ea126-bf30-490f-87dc-9da40a8fd078
+# ╠═c3b6f460-5b88-4c89-8520-d6b85db10bc5
 # ╠═1b950142-cac6-4e15-8fc1-5add615e0365
 # ╠═dc1dfc49-3495-45f5-abf7-789b4ce8e946
 # ╠═768d6467-fc84-4439-8b4c-9aedb0ae495b
+# ╠═03939ca5-f9bd-412d-8cab-61f832c1047f
+# ╠═a4226d21-dc25-49ff-be15-bcd9af178b2f
 # ╠═274b43b8-6fb9-4e79-8539-3cc4258bb956
 # ╠═78d4b94f-22e9-4f4f-83ac-311759893219
 # ╠═4f2bbb75-8b54-4f58-a629-4ceb8903b2c1

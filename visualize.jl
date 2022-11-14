@@ -26,7 +26,7 @@ function agent_marker(agent)
         return :circle
     end
     if agent.species== :leopard
-        return :circle
+        return :utriangle
     end
     if agent.species== :boar
         # return :utriangle
@@ -66,7 +66,7 @@ end
 const PLOT_AGENT_MARKERS = Dict(true => :circle, false => :utriangle)
 const PLOT_MAP_COLOR = (nan_color=RGBA(1.0, 1.0, 0.0, 0.5),
                         colormap=[RGBA(0, 1.0, 0, i) for i in 0:0.01:1],
-                        colorrange=(0, 1))
+                        colorrange=(0.8, 1))
 function get_plot_kwargs(model)
     return (frames=2880,
             framerate=24,

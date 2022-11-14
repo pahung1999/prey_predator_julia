@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.13
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -487,25 +487,28 @@ function count_species(model)
 end
 
 # ╔═╡ 90976414-79c9-420d-a845-d9dd856a4a52
-
-
-# ╔═╡ dc0fa801-8932-4954-9326-cebcbb53bbb8
-rand(0:1)
+# ╠═╡ disabled = true
+#=╠═╡
+x=[1 2 3 4 5 6]
+  ╠═╡ =#
 
 # ╔═╡ 0d758131-fc07-48b5-b58b-888f3b0d7b8d
-
+y=(5,4)
 
 # ╔═╡ 64d51cc3-7c99-457b-a558-695e8b7b50ac
-
+y[1]
 
 # ╔═╡ 403986fc-c0a7-4420-8d3b-c7d9b44ea43c
 md"# Model params"
 
 # ╔═╡ 77ef75a9-f76c-441a-b8c0-96d3a6e515ee
-Val{:leopard}
+function print_x(x=10,y=30)
+	print(x)
+	print(y)
+end
 
 # ╔═╡ 9adcfec2-196d-4e38-b8e8-1821007c7b57
-Matrix{Float32}
+print_x(5)
 
 # ╔═╡ 7d4253e6-bff1-4cd2-a724-9f97506eda1d
 begin
@@ -563,7 +566,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "1f6bf284920436fec183b51a10fc4a1b0a4bc399"
+project_hash = "8e5cf1f005f9896aa48dcb13c4b38c6583100ea1"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -2115,7 +2118,6 @@ version = "3.5.0+0"
 # ╠═3cca8d9d-c584-44bd-96e4-0dde139f851b
 # ╠═c3d007fd-7889-4448-a99b-4bb66163a1db
 # ╠═90976414-79c9-420d-a845-d9dd856a4a52
-# ╠═dc0fa801-8932-4954-9326-cebcbb53bbb8
 # ╠═0d758131-fc07-48b5-b58b-888f3b0d7b8d
 # ╠═64d51cc3-7c99-457b-a558-695e8b7b50ac
 # ╠═2acf8cff-5998-40f0-b9ce-d3f09dc00487

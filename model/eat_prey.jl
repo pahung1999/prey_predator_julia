@@ -32,5 +32,6 @@ function eat_prey!(agent,prey, model)
 				params.max_energy[agent.species] - agent.energy)
 		agent.energy += consumption
 		kill_agent!(prey,model)
+		@info "Chết vì bị ăn"
 	end
 end

@@ -8,24 +8,30 @@ const LIST_SPECIES= (:tiger, :leopard, :boar)
 
 const DEFAULT_MAX_ENERGY= Dict(:tiger => 1.0,  :boar => 0.6,  :leopard => 0.8) 
 const DEFAULT_ENERGY_TRANSFERT = Dict(:tiger => 0.5,  :boar => 0.15,  :leopard => 0.4)
+
 const DEFAULT_REPRODUCE_PROBA= Dict(:tiger => 0.005,  :boar => 0.01,  :leopard => 0.005)
 const DEFAULT_REPRODUCE_ENERGY= Dict(:tiger => 0.5,  :boar => 0.3,  :leopard => 0.4)
+
 const DEFAULT_ENERGY_CONSUME = Dict(:tiger => 0.02,  :boar => 0.015,  :leopard => 0.016)
+
 const MAX_OFFSPRING = Dict(:tiger => 2,  :boar => 6,  :leopard => 4)
 
 const DEFAULT_LIFESPAN = Dict(:tiger => (15*365),  :boar => (12*365),  :leopard => (14*365))
-const DEFAULT_CATCH_PROB = Dict(:tiger => 0.9, :leopard => 0.9)
+const DEFAULT_CATCH_PROB = Dict(:tiger => 0.1, :leopard => 0.3)
 
 @kwdef struct ModelParams
 	energy_consum::Dict{Symbol, Float16} = DEFAULT_ENERGY_CONSUME
 	max_energy::Dict{Symbol, Float16} = DEFAULT_MAX_ENERGY
+	lifespan::Dict{Symbol, Int16} = DEFAULT_LIFESPAN
+
 	proba_reproduce::Dict{Symbol, Float16} = DEFAULT_REPRODUCE_PROBA
 	max_offsprings::Dict{Symbol, Int16} = MAX_OFFSPRING
 	energy_reproduce::Dict{Symbol, Float16} = DEFAULT_REPRODUCE_ENERGY
+
 	max_food::Float16 = 1
-	catch_prob::Dict{Symbol, Float16} = DEFAULT_CATCH_PROB
-	lifespan::Dict{Symbol, Int16} = DEFAULT_LIFESPAN
 	energy_transfert::Dict{Symbol, Float16} = DEFAULT_ENERGY_TRANSFERT
+
+	catch_prob::Dict{Symbol, Float16} = DEFAULT_CATCH_PROB
 	fight_prob::Float16 = 0.15
 	# Initial params
 	grid_size::Tuple{Int, Int}
@@ -45,21 +51,21 @@ include("./eat_prey.jl")
 include("./agent_step.jl")
 
 #Hàm tạo loài
-function animal(id, pos, species; energy = rand(0:0.1:1), age = 0)
-	Animal(id, pos, species, DEFAULT_MAX_ENERGY[species], age)
+function animal(id, pos, species, energy = DEFAULT_MAX_ENERGY[species], age = 0)
+	Animal(id, pos, species, energy, age)
 end
 
-function tiger(id, pos; energy = rand(0:0.1:1), age = 0)
-	Animal(id, pos, :tiger, energy, age)
-end
+# function tiger(id, pos; energy = rand(0:0.1:1), age = 0)
+# 	Animal(id, pos, :tiger, energy, age)
+# end
 
-function boar(id, pos; energy = rand(0:0.1:1), age = 0)
-	Animal(id, pos, :boar, energy, age)
-end
+# function boar(id, pos; energy = rand(0:0.1:1), age = 0)
+# 	Animal(id, pos, :boar, energy, age)
+# end
 
-function leopard(id, pos; energy = rand(0:0.1:1), age = 0)
-	Animal(id, pos, :leopard, energy, age)
-end
+# function leopard(id, pos; energy = rand(0:0.1:1), age = 0)
+# 	Animal(id, pos, :leopard, energy, age)
+# end
 
 
 function is_not_tiger(agent)
@@ -93,7 +99,7 @@ end
 	
 function model_step!(model)
 	params = model.params
-	model.x = rand()
+	# model.x = rand()
 	model.count_species = count_species(model)
 	@. model.food = min(model.food + 0.01, params.max_food)
 end
@@ -122,20 +128,22 @@ function init_model(params)
 		count_species=count_species(params.grid_size),
 		food=ones(params.grid_size))
 	model = AgentBasedModel(Animal, space; properties=props)
-
+	max_energy=params.max_energy
 	for _ in 1:params.num_init_tiger
 		id = nextid(model)
 		pos = random_position(model)
-		add_agent!(animal(id, pos, :tiger), model)
+		add_agent!(animal(id, pos, :tiger, rand(Uniform(0.5,1))*max_energy[:tiger]), model)
+
+		pos = random_position(model)
 		id = nextid(model)
-		add_agent!(animal(id, pos, :leopard), model)
+		add_agent!(animal(id, pos, :leopard,rand(Uniform(0.5,1))*max_energy[:leopard]), model)
 	end
 	for _ in 1:params.num_init_boar
 		id = nextid(model)
 		pos = random_position(model)
-		add_agent!(animal(id, pos, :boar), model)
+		add_agent!(animal(id, pos, :boar,rand(Uniform(0.5,1))*max_energy[:boar]), model)
 	end
-	model.count_species = count_species(model)
+	# model.count_species = count_species(model)
 	
 	model , agent_step!, model_step! 
 end

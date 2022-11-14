@@ -45,9 +45,10 @@ framerate=5,
 ac=AgentColor(model),
 am=agent_marker,
 heatarray=model_heatarray,
-heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
-			colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
-			colorrange=(0, 1)))
+# heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
+# 			colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
+# 			colorrange=(0, 1))
+			)
 
 # adata, mdata = run!(model, agent_step!, model_step!, steps; adata=adata, mdata=[healthy_food])
 

@@ -425,17 +425,18 @@ end
 # ╔═╡ 03939ca5-f9bd-412d-8cab-61f832c1047f
 
 abmvideo(videopath,
-model,
-agent_step!,
-model_step!;#
-frames=steps,
-framerate=5,
-ac=AgentColor(model),
-am=agent_marker,
-heatarray=model_heatarray,
-heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
-			colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
-			colorrange=(0, 1)))
+		model,
+		agent_step!,
+		model_step!;
+		frames=steps,
+		framerate=10,
+		ac=AgentColor(model),
+		am=agent_marker,
+		heatarray=model_heatarray,
+		# heatkwargs=(nan_color=(1.0, 1.0, 0.0, 0.5),
+		# 			colormap=[(0, 1.0, 0, i) for i in 0:0.01:1],
+		# 			colorrange=(0, 1))
+		)
 
 
 # ╔═╡ a4226d21-dc25-49ff-be15-bcd9af178b2f

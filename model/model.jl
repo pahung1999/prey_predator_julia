@@ -6,15 +6,15 @@ using Distributions
 
 const LIST_SPECIES= (:tiger, :leopard, :boar)
 
-const DEFAULT_MAX_ENERGY= Dict(:tiger => 5.0,  :boar => 5.6,  :leopard => 5.8) 
+const DEFAULT_MAX_ENERGY= Dict(:tiger => 1.0,  :boar => 0.6,  :leopard => 0.8) 
 const DEFAULT_ENERGY_TRANSFERT = Dict(:tiger => 0.5,  :boar => 0.15,  :leopard => 0.4)
 const DEFAULT_REPRODUCE_PROBA= Dict(:tiger => 0.005,  :boar => 0.01,  :leopard => 0.005)
 const DEFAULT_REPRODUCE_ENERGY= Dict(:tiger => 0.5,  :boar => 0.3,  :leopard => 0.4)
 const DEFAULT_ENERGY_CONSUME = Dict(:tiger => 0.02,  :boar => 0.015,  :leopard => 0.016)
 const MAX_OFFSPRING = Dict(:tiger => 2,  :boar => 6,  :leopard => 4)
 
-const DEFAULT_LIFESPAN = Dict(:tiger => 15 * 365,  :boar => 12 * 365,  :leopard => 14 * 365)
-const DEFAULT_CATCH_PROB = Dict(:tiger => 0.3, :leopard => 0.5)
+const DEFAULT_LIFESPAN = Dict(:tiger => (15*365),  :boar => (12*365),  :leopard => (14*365))
+const DEFAULT_CATCH_PROB = Dict(:tiger => 0.9, :leopard => 0.9)
 
 @kwdef struct ModelParams
 	energy_consum::Dict{Symbol, Float16} = DEFAULT_ENERGY_CONSUME

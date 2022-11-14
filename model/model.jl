@@ -73,17 +73,17 @@ function is_not_tiger(agent)
 end
 
 #Hàm đếm số lượng
-function count_species(model)
-	Dict(
-		species => [
-			count(
-				agent -> agent.species == species, 
-				agents_in_position(Tuple(I), model))
-			for I in CartesianIndices(model.food)
-		]
-		for species in LIST_SPECIES
-	)
-end
+# function count_species(model)
+# 	Dict(
+# 		species => [
+# 			count(
+# 				agent -> agent.species == species, 
+# 				agents_in_position(Tuple(I), model))
+# 			for I in CartesianIndices(model.food)
+# 		]
+# 		for species in LIST_SPECIES
+# 	)
+# end
 
 function count_species(size::Tuple)
 	Dict(
@@ -100,7 +100,7 @@ end
 function model_step!(model)
 	params = model.params
 	# model.x = rand()
-	model.count_species = count_species(model)
+	# model.count_species = count_species(model)
 	@. model.food = min(model.food + 0.01, params.max_food)
 end
 

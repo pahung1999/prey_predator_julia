@@ -439,8 +439,8 @@ abmvideo(videopath,
 		)
 
 
-# ╔═╡ a4226d21-dc25-49ff-be15-bcd9af178b2f
-
+# ╔═╡ 0d758131-fc07-48b5-b58b-888f3b0d7b8d
+y=[0.02 0.015 0.016]
 
 # ╔═╡ 274b43b8-6fb9-4e79-8539-3cc4258bb956
 # abmvideo("./test_v1.mp4", model, agent_step! , model_step!; spf = 1, framerate = 30,frames = 200)
@@ -487,16 +487,10 @@ function count_species(model)
 end
 
 # ╔═╡ 90976414-79c9-420d-a845-d9dd856a4a52
-# ╠═╡ disabled = true
-#=╠═╡
-x=[1 2 3 4 5 6]
-  ╠═╡ =#
-
-# ╔═╡ 0d758131-fc07-48b5-b58b-888f3b0d7b8d
-y=(5,4)
+x=[1 0.6 0.8]
 
 # ╔═╡ 64d51cc3-7c99-457b-a558-695e8b7b50ac
-y[1]
+rand(x)
 
 # ╔═╡ 403986fc-c0a7-4420-8d3b-c7d9b44ea43c
 md"# Model params"
@@ -508,7 +502,7 @@ function print_x(x=10,y=30)
 end
 
 # ╔═╡ 9adcfec2-196d-4e38-b8e8-1821007c7b57
-print_x(5)
+count
 
 # ╔═╡ 7d4253e6-bff1-4cd2-a724-9f97506eda1d
 begin
@@ -2111,14 +2105,13 @@ version = "3.5.0+0"
 # ╠═dc1dfc49-3495-45f5-abf7-789b4ce8e946
 # ╠═768d6467-fc84-4439-8b4c-9aedb0ae495b
 # ╠═03939ca5-f9bd-412d-8cab-61f832c1047f
-# ╠═a4226d21-dc25-49ff-be15-bcd9af178b2f
+# ╠═0d758131-fc07-48b5-b58b-888f3b0d7b8d
 # ╠═274b43b8-6fb9-4e79-8539-3cc4258bb956
 # ╠═78d4b94f-22e9-4f4f-83ac-311759893219
 # ╠═4f2bbb75-8b54-4f58-a629-4ceb8903b2c1
 # ╠═3cca8d9d-c584-44bd-96e4-0dde139f851b
 # ╠═c3d007fd-7889-4448-a99b-4bb66163a1db
 # ╠═90976414-79c9-420d-a845-d9dd856a4a52
-# ╠═0d758131-fc07-48b5-b58b-888f3b0d7b8d
 # ╠═64d51cc3-7c99-457b-a558-695e8b7b50ac
 # ╠═2acf8cff-5998-40f0-b9ce-d3f09dc00487
 # ╠═403986fc-c0a7-4420-8d3b-c7d9b44ea43c

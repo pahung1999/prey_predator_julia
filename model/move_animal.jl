@@ -15,11 +15,11 @@ function move_animal!(agent,model, ::Val{:tiger})
 	boar_positions=pos_filter(good_positions, :boar, 0 , "greater" , model)  #Có lợn
 	bad_positions=pos_filter(good_positions, :boar, 1 , "less" , model) #Không có lợn
 	if !isempty(boar_positions)
-		@info agent, boar_positions, model
+		# @info agent, boar_positions, model
 		x=rand(model.rng,boar_positions)
-		@info "rand(boar_positions) ", x
-		@info "Agent in x ", agents_in_position(x,model)
-		@info "Agent in before move ", agents_in_position(agent,model)
+		# @info "rand(boar_positions) ", x
+		# @info "Agent in x ", agents_in_position(x,model)
+		# @info "Agent in before move ", agents_in_position(agent,model)
 		return move_agent!(agent, x, model)
 	end
 	#Khi ko có lợn xung quanh, năng lượng dưới 0.3, thực hiện tìm báo xung quanh

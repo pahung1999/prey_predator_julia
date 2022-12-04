@@ -52,7 +52,10 @@ end
 include("./move_animal.jl")
 include("./eat_prey.jl")
 include("./agent_step.jl")
-
+include("./sub_function.jl")
+include("./agent_move.jl")
+include("./agent_eat.jl")
+include("./agent_reproduce.jl")
 #Hàm tạo loài
 function animal(id, pos, species, energy, age = 0)
 	Animal(id, pos, species, energy, age)
@@ -105,6 +108,10 @@ function model_step!(model)
 	# model.x = rand()
 	# model.count_species = count_species(model)
 	@. model.food = min(model.food + params.grow_speed, params.max_food)
+	model.step_num +=1
+	
+	# print("Hết bước ", model.step_num)
+	# print("==================================\n")
 end
 
 
@@ -118,7 +125,8 @@ end
 	params::ModelParams
 	food::Matrix{Float16}
 	count_species::Dict{Symbol, Matrix{Int}}
-	x::Float16 = 1
+	# x::Float16 = 1
+	step_num::Int16 = 0
 end
 
 
@@ -152,10 +160,13 @@ function init_model(params)
 	
 	# model.count_species = count_species(model)
 	
+
 	model , agent_step!, model_step! 
+
+
+	# agent_eat!, agent_reproduce!
+	# model ,agent_move!,model_step! 
 end
-
-
 
 
 end 

@@ -20,14 +20,15 @@ function eat_prey!(agent,prey, model)
     if prey.species == :leopard
 		leopard_num=count(agent -> agent.species==:leopard,  agents_in_position(prey,model))
 		tiger_num=count(agent -> agent.species==:tiger,  agents_in_position(agent,model))
-		fight_prob=(leopard_num+1)/(tiger_num+leopard_num+1)
+		fight_prob=model.fight_prob
         if agent.energy < 0.3 && rand(model.rng,Uniform(0, 1)) < fight_prob # (params.catch_prob[agent.species]*fight_prob) #
             consumption = min(
 				prey.energy,
 				params.energy_transfert[agent.species],
 				params.max_energy[agent.species] - agent.energy)
             agent.energy += consumption
-            kill_agent!(prey,model)
+            # kill_agent!(prey,model)
+			kill_an_agent!(prey, model)
         end
         return
     end
@@ -38,7 +39,8 @@ function eat_prey!(agent,prey, model)
 				params.energy_transfert[agent.species],
 				params.max_energy[agent.species] - agent.energy)
 		agent.energy += consumption
-		kill_agent!(prey,model)
+		# kill_agent!(prey,model)
+		kill_an_agent!(prey, model)
 		# @info "Chết vì bị ăn"
 	end
 end

@@ -26,12 +26,12 @@ const boar = IsSpecies(:boar)
 const leopard = IsSpecies(:leopard)
 const tiger = IsSpecies(:tiger)
 
-const scheduler= Agents.Schedulers.Randomly()
+# const scheduler= Agents.Schedulers.Randomly()
 model, agent_step!, model_step! = let
     params = Model.ModelParams(
 		grid_size=(50, 50),
-		num_init_tiger=50,
-		num_init_leopard=50,
+		num_init_tiger=20,
+		num_init_leopard=25,
 		num_init_boar=500
 	)
     Model.init_model(params)
@@ -47,11 +47,13 @@ adata = let
 	]
 end
 alabels = ["count_tiger", "count_boar", "count_leopard"]
-
 steps=10000
+# adata, mdata = run!(model, agent_step!, model_step!, steps; adata=adata, mdata=[healthy_food])
+# print(adata)
 fig, obs = abmexploration(model;
                           (agent_step!)=agent_step!,
                           (model_step!)=model_step!,
+						#   scheduler = scheduler,
                           adata=adata,
 						  alabels=alabels,
                           mdata=[healthy_food],
@@ -61,7 +63,7 @@ fig, obs = abmexploration(model;
 						am=agent_marker,
 						heatarray=model_heatarray,
 						heatkwargs=PLOT_MAP_COLOR,
-						scheduler = scheduler,
+						
 						# sleep= 0.01,
 						# spu=50
 						)

@@ -33,3 +33,8 @@ function get_random_max_pos(dict_count,model)
 	pos_list=[k for (k,v) in dict_count if v==max_value]
 	return max_value, rand(model.rng,pos_list)
 end
+
+function kill_an_agent!(agent,model)
+    kill_agent!(agent, model)
+    append!(model.death_list, agent.id)
+end

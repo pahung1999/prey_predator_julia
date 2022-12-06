@@ -4,7 +4,7 @@ function agent_eat!(agent::Animal, model)
 
     agent_eat!(agent, model, Val(species))
 
-    # print("Agent ID ở bước ",model.step_num," : ",agent.id, " . Loài: ",agent.species, " . Đang ăn tại vị trí: ", agent.pos, "\n")
+    # print("Step: ",model.step_num,". ID",agent.id, ". Species: ",agent.species, ". Position: ", agent.pos, ". Action: Eat", "\n")
 
 end
 

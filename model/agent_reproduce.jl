@@ -1,8 +1,11 @@
 function agent_reproduce!(agent::Animal, model)
 #Born
+
+    # print("Step: ",model.step_num,". ID",agent.id, ". Species: ",agent.species, ". Position: ", agent.pos, ". Action: Reproduce", "\n")
     params = model.params
     species = agent.species
-    # print("Agent ID ở bước ",model.step_num," : ",agent.id, " . Loài: ",agent.species, " . Đang đẻ tại vị trí: ", agent.pos, "\n")
+    
+    
     if agent.energy >= params.energy_reproduce[species]  && rand(model.rng,Uniform(0, 1)) <= params.proba_reproduce[species]
         nb_offspring= rand(model.rng,1:params.max_offsprings[species])
         # energy_child=agent.energy/2/nb_offspring

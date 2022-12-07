@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.13
 
 using Markdown
 using InteractiveUtils
@@ -292,7 +292,39 @@ end
 ran_x=rand(Uniform(0.5,1))
 
 # ╔═╡ f8754593-3bc0-4451-b1cd-b13c888d7a5b
-length(x)
+# open("./data_num.txt", "r+") do io
+# 	num=read(io)
+#    	# write(io, num+1)
+# 	print(num)
+#    end
+num=parse(Int64, (open(f->read(f, String), "./data_num.txt")))
+
+
+# ╔═╡ e768a7ac-bf95-4097-83fc-185ff854e04a
+open("./data_num.txt", "w") do io
+	# num=read(io)
+   	write(io, string(num+1))
+end
+
+# ╔═╡ 1d78a930-4e50-433a-b639-a40373052e5d
+for i in 1:10
+	print(i)
+end
+
+# ╔═╡ 34db8da6-a0e2-4448-9987-a52c4a9fd090
+
+
+# ╔═╡ 47e761be-0524-484a-8c54-801cffac0abf
+
+
+# ╔═╡ 389ab3b6-f7ef-46fe-8c6d-6048b95f9c5c
+
+
+# ╔═╡ d2b12d8f-6fb2-49a2-aee5-b16ec5f1c440
+num
+
+# ╔═╡ 418a6b09-6d6c-4681-9fcf-ff18b6b26022
+
 
 # ╔═╡ f9df8be0-5f6b-4093-ad6d-1a9ccdc483ac
 filter(x -> x==1,[3,4,5])
@@ -590,9 +622,9 @@ Shuffle = "~0.1.1"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "a8734d35a98d8aa3b16333adb2f595b4990e8c4d"
+project_hash = "a2478ee2aafbcd193684fa11d607e31533149311"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -2161,9 +2193,15 @@ version = "3.5.0+0"
 # ╠═5c520921-9c7a-4a15-8964-4458964c6069
 # ╠═5625fdfc-b06e-4054-be10-db72a79bd0b4
 # ╠═f8754593-3bc0-4451-b1cd-b13c888d7a5b
+# ╠═e768a7ac-bf95-4097-83fc-185ff854e04a
+# ╠═1d78a930-4e50-433a-b639-a40373052e5d
+# ╠═34db8da6-a0e2-4448-9987-a52c4a9fd090
+# ╠═47e761be-0524-484a-8c54-801cffac0abf
+# ╠═389ab3b6-f7ef-46fe-8c6d-6048b95f9c5c
+# ╠═d2b12d8f-6fb2-49a2-aee5-b16ec5f1c440
+# ╠═418a6b09-6d6c-4681-9fcf-ff18b6b26022
 # ╠═f9df8be0-5f6b-4093-ad6d-1a9ccdc483ac
 # ╠═fd0a09f5-3016-4d95-9470-d6cefae9c428
-# ╠═d3a9c48d-3490-4a89-80ce-871789171048
 # ╠═27e3ff2e-a743-4ddf-8da9-e04ad9dba5f9
 # ╠═1edb9ca2-5d6b-493a-8e3b-9a262066648d
 # ╠═f809274e-1479-465d-ba24-3343d9de07c4

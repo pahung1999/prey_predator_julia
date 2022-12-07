@@ -51,7 +51,7 @@ function complex_step!(model)
 		agent_eat!(model[id], model)
 		agent_move!(model[id], model)
     end
-
+  
 	for id in tiger_scheduler(model)
         agent_reproduce!(model[id], model)
 		if id in model.death_list

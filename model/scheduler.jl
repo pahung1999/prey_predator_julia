@@ -42,34 +42,37 @@ end
 
 function complex_step!(model)
     for id in boar_scheduler(model)
+		
+		agent_reproduce!(model[id], model)
 		if id in model.death_list
 			# print("id: ",id, ". list: ",model.death_list,"\n")
 			continue
 		end
-		agent_reproduce!(model[id], model)
 		agent_eat!(model[id], model)
 		agent_move!(model[id], model)
     end
 
-	for id in leopard_scheduler(model)
+	for id in tiger_scheduler(model)
+        agent_reproduce!(model[id], model)
 		if id in model.death_list
 			# print("id: ",id, ". list: ",model.death_list,"\n")
 			continue
 		end
+		agent_eat!(model[id], model)
+		agent_move!(model[id], model)
+    end
+	
+	for id in leopard_scheduler(model)
 		agent_reproduce!(model[id], model)
+		if id in model.death_list
+			# print("id: ",id, ". list: ",model.death_list,"\n")
+			continue
+		end
 		agent_eat!(model[id], model)
 		agent_move!(model[id], model)
     end
     
-	for id in tiger_scheduler(model)
-        if id in model.death_list
-			# print("id: ",id, ". list: ",model.death_list,"\n")
-			continue
-		end
-		agent_reproduce!(model[id], model)
-		agent_eat!(model[id], model)
-		agent_move!(model[id], model)
-    end
+	
 
 
     # model_step!(model)

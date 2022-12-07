@@ -21,6 +21,7 @@ begin
 	using PlutoLinks: @ingredients
 	using InteractiveDynamics
 	using GLMakie
+	using Shuffle
 end
 # move_animal = @ingredients("./move_animal.jl")
 
@@ -291,13 +292,13 @@ end
 ran_x=rand(Uniform(0.5,1))
 
 # ╔═╡ f8754593-3bc0-4451-b1cd-b13c888d7a5b
-ran_x
+length(x)
 
-# ╔═╡ d3a9c48d-3490-4a89-80ce-871789171048
-# ╠═╡ disabled = true
-#=╠═╡
-death_list::Array{Int} = [1,2,3]
-  ╠═╡ =#
+# ╔═╡ f9df8be0-5f6b-4093-ad6d-1a9ccdc483ac
+filter(x -> x==1,[3,4,5])
+
+# ╔═╡ fd0a09f5-3016-4d95-9470-d6cefae9c428
+
 
 # ╔═╡ 27e3ff2e-a743-4ddf-8da9-e04ad9dba5f9
 
@@ -571,6 +572,7 @@ GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
 InteractiveDynamics = "ec714cd0-5f51-11eb-0b6e-452e7367ff84"
 PlutoLinks = "0ff47ea0-7a50-410d-8455-4348d5de0420"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Shuffle = "bf21e494-c40e-4daa-abfb-de5ec0aad010"
 
 [compat]
 Agents = "~5.6.2"
@@ -581,6 +583,7 @@ GLMakie = "~0.6.13"
 InteractiveDynamics = "~0.21.11"
 PlutoLinks = "~0.1.6"
 PlutoUI = "~0.7.49"
+Shuffle = "~0.1.1"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -589,7 +592,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "1f6bf284920436fec183b51a10fc4a1b0a4bc399"
+project_hash = "a8734d35a98d8aa3b16333adb2f595b4990e8c4d"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -1778,6 +1781,12 @@ git-tree-sha1 = "91eddf657aca81df9ae6ceb20b959ae5653ad1de"
 uuid = "992d4aef-0814-514b-bc4d-f2e9a6c4116f"
 version = "1.0.3"
 
+[[deps.Shuffle]]
+deps = ["Random"]
+git-tree-sha1 = "b812fb30d6d8b295b71dd5a4102d1ae7b60698e3"
+uuid = "bf21e494-c40e-4daa-abfb-de5ec0aad010"
+version = "0.1.1"
+
 [[deps.SignedDistanceFields]]
 deps = ["Random", "Statistics", "Test"]
 git-tree-sha1 = "d263a08ec505853a5ff1c1ebde2070419e3f28e9"
@@ -2152,6 +2161,8 @@ version = "3.5.0+0"
 # ╠═5c520921-9c7a-4a15-8964-4458964c6069
 # ╠═5625fdfc-b06e-4054-be10-db72a79bd0b4
 # ╠═f8754593-3bc0-4451-b1cd-b13c888d7a5b
+# ╠═f9df8be0-5f6b-4093-ad6d-1a9ccdc483ac
+# ╠═fd0a09f5-3016-4d95-9470-d6cefae9c428
 # ╠═d3a9c48d-3490-4a89-80ce-871789171048
 # ╠═27e3ff2e-a743-4ddf-8da9-e04ad9dba5f9
 # ╠═1edb9ca2-5d6b-493a-8e3b-9a262066648d

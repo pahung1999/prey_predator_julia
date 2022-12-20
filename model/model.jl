@@ -11,8 +11,18 @@ const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.4,      :le
 const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.02,    :tiger => 0.015,    :leopard => 0.0132)
 const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.012,   :tiger => 0.002,    :leopard => 0.003)
 const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.7,     :tiger => 0.6,      :leopard => 0.48)
-const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.28,     :leopard => 0.31)
+const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.28,     :leopard => 0.35)
 const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
+
+# Dữ liệu gốc
+# const DEFAULT_MAX_ENERGY= Dict(		   :boar => 1.0,     :tiger => 1.0,      :leopard => 0.8) 
+# const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.4,      :leopard => 0.36)
+# const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.02,    :tiger => 0.015,    :leopard => 0.0132)
+# const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.012,   :tiger => 0.002,    :leopard => 0.003)
+# const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.7,     :tiger => 0.6,      :leopard => 0.48)
+# const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.28,     :leopard => 0.31)
+# const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
+
 
 const DEFAULT_GROW_SPEED = 0.012
 
@@ -22,7 +32,7 @@ const MAX_OFFSPRING = Dict(:tiger => 1,  :boar => 1,  :leopard => 1)
 @kwdef struct ModelParams
 	energy_consum::Dict{Symbol, Float16} = DEFAULT_ENERGY_CONSUME
 	max_energy::Dict{Symbol, Float16} = DEFAULT_MAX_ENERGY
-	lifespan::Dict{Symbol, Int16} = DEFAULT_LIFESPAN
+	lifespan::Dict{Symbol, Int32} = DEFAULT_LIFESPAN
 
 	# produce_age::Dict{Symbol, Int16} = DEFAULT_PRODUCE_AGE
 	proba_reproduce::Dict{Symbol, Float16} = DEFAULT_REPRODUCE_PROBA

@@ -12,7 +12,8 @@ end
 
 function model_step!(model)
 	params = model.params
-	@. model.food = min(model.food + params.grow_speed, params.max_food)
+	# @. model.food = min(model.food + params.grow_speed, params.max_food)
+	@. model.food = min(model.food + model.mask * params.grow_speed, params.max_food)
 	model.step_num +=1
 	# print("Hết bước ", model.step_num)
 	# print("==================================\n")

@@ -34,7 +34,8 @@ model, agent_step!, model_step! = let
 		grid_size=(50, 50),
 		num_init_tiger=50,
 		num_init_leopard=50,
-		num_init_boar=200
+		num_init_boar=200,
+		map="./map/map_310.png"
 	)
 	Model.init_model(params)
 end

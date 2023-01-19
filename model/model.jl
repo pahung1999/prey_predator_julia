@@ -1,5 +1,5 @@
 module Model
-
+using Images
 using Base: @kwdef
 using Agents
 using Distributions
@@ -59,6 +59,7 @@ const DEFAULT_GROW_SPEED = 0.01
 	num_init_tiger::Int
 	num_init_boar::Int
 	num_init_leopard::Int
+	map::String
 
 end
 
@@ -134,11 +135,12 @@ end
 @kwdef mutable struct ModelProperties
 	params::ModelParams
 	food::Matrix{Float16}
+	mask::Matrix{Float16}
 	count_species::Dict{Symbol, Int}
 	# x::Float16 = 1
 	step_num::Int16 = 0
 	death_list::Array{Int} = []
-
+	
 	fight_prob::Float32 = 0.15
 end
 
@@ -150,10 +152,19 @@ function init_model(params)
 	
 	FloatType = typeof(params.max_energy[:tiger])
 	space = GridSpace(params.grid_size; periodic=false)
+
+	#Load map
+	img = load(params.map)
+	img_gray=Gray.(1 .- red.(img))
+	mat = convert(Array{Float16}, img_gray)
+	mask = img_gray .> 0
+	mat_mask = convert(Array{Float16}, img_gray)
+
 	props = ModelProperties(
 		params=params, 
 		count_species=count_species(params.grid_size),
-		food=ones(params.grid_size),
+		food=mat, #ones(params.grid_size),
+		mask=mat_mask
 		)
 	model = AgentBasedModel(Animal, space; properties=props) #scheduler = spiece_scheduler
 	max_energy=params.max_energy

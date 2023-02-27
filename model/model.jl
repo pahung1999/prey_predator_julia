@@ -1,18 +1,19 @@
 module Model
-
+using Images
 using Base: @kwdef
 using Agents
 using Distributions
 
 const LIST_SPECIES= (:tiger, :leopard, :boar)
 
-const DEFAULT_MAX_ENERGY= Dict(		   :boar => 1.0,     :tiger => 1.0,      :leopard => 0.8) 
-const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.4,      :leopard => 0.36)
-const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.02,    :tiger => 0.015,    :leopard => 0.0132)
-const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.012,   :tiger => 0.002,    :leopard => 0.003)
-const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.7,     :tiger => 0.6,      :leopard => 0.48)
-const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.28,     :leopard => 0.35)
-const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
+const DEFAULT_MAX_ENERGY= Dict(		   :boar => 0.6,     :tiger => 1.0,      :leopard => 0.8) 
+const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.5,      :leopard => 0.4)
+const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.015,   :tiger => 0.02,    :leopard => 0.016)
+const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.01,    :tiger => 0.01,    :leopard => 0.005)
+const MAX_OFFSPRING =      Dict(       :boar => 6,       :tiger => 2  ,      :leopard => 4)
+const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.3,     :tiger => 0.5,      :leopard => 0.4)
+const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.3,     :leopard => 0.35)
+const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (21*365))
 
 # Dữ liệu gốc
 # const DEFAULT_MAX_ENERGY= Dict(		   :boar => 1.0,     :tiger => 1.0,      :leopard => 0.8) 
@@ -23,10 +24,18 @@ const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopa
 # const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.28,     :leopard => 0.31)
 # const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
 
+#Dữ liệu "ngon"
+# const DEFAULT_MAX_ENERGY= Dict(		   :boar => 0.6,     :tiger => 1.0,      :leopard => 0.8) 
+# const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.5,      :leopard => 0.4)
+# const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.015,   :tiger => 0.02,    :leopard => 0.016)
+# const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.01,    :tiger => 0.005,    :leopard => 0.005)
+# const MAX_OFFSPRING =      Dict(       :boar => 6,       :tiger => 2  ,      :leopard => 4)
+# const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.3,     :tiger => 0.5,      :leopard => 0.4)
+# const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.3,     :leopard => 0.35)
+# const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
 
-const DEFAULT_GROW_SPEED = 0.012
+const DEFAULT_GROW_SPEED = 0.01
 
-const MAX_OFFSPRING = Dict(:tiger => 1,  :boar => 1,  :leopard => 1)
 
 
 @kwdef struct ModelParams
@@ -50,6 +59,7 @@ const MAX_OFFSPRING = Dict(:tiger => 1,  :boar => 1,  :leopard => 1)
 	num_init_tiger::Int
 	num_init_boar::Int
 	num_init_leopard::Int
+	map::String
 
 end
 
@@ -125,12 +135,13 @@ end
 @kwdef mutable struct ModelProperties
 	params::ModelParams
 	food::Matrix{Float16}
+	mask::Matrix{Float16}
 	count_species::Dict{Symbol, Int}
 	# x::Float16 = 1
 	step_num::Int16 = 0
 	death_list::Array{Int} = []
-
-	fight_prob::Float32 = 0.25
+	
+	fight_prob::Float32 = 0.15
 end
 
 
@@ -141,10 +152,19 @@ function init_model(params)
 	
 	FloatType = typeof(params.max_energy[:tiger])
 	space = GridSpace(params.grid_size; periodic=false)
+
+	#Load map
+	img = load(params.map)
+	img_gray=Gray.(1 .- red.(img))
+	mat = convert(Array{Float16}, img_gray)
+	mask = img_gray .> 0
+	mat_mask = convert(Array{Float16}, img_gray)
+
 	props = ModelProperties(
 		params=params, 
 		count_species=count_species(params.grid_size),
-		food=ones(params.grid_size),
+		food=mat, #ones(params.grid_size),
+		mask=mat_mask
 		)
 	model = AgentBasedModel(Animal, space; properties=props) #scheduler = spiece_scheduler
 	max_energy=params.max_energy

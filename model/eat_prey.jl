@@ -21,15 +21,16 @@ end
 
 #Hổ ăn
 function eat_prey!(agent,prey, model, ::Val{:tiger})
-
+	params=model.params
+	catch_prob= 1-prey.energy  #(prey.energy/ params.max_energy[prey.species])
 	if prey.species == :leopard 
-        if agent.energy < 0.3 && rand(model.rng,Uniform(0, 1)) < model.fight_prob
+        if agent.energy < 0.3 && rand(model.rng) < model.fight_prob
             tiger_eat_prey!(agent,prey,model)
 			kill_an_agent!(prey, model)
         end
         return
     else
-		if rand(model.rng,Uniform(0, 1)) < model.params.catch_prob[agent.species]
+		if rand(model.rng) < model.params.catch_prob[agent.species]
             tiger_eat_prey!(agent,prey,model)
 			kill_an_agent!(prey, model)
         end
@@ -39,27 +40,21 @@ end
 
 function tiger_eat_prey!(agent,prey,model)
 	params=model.params
-
-	agent_list= filter(agent -> agent.species==:tiger, collect(agents_in_position(agent,model)))
-
-	tiger_num_in_pos= length(agent_list)
-	energy_1_tiger=prey.energy/tiger_num_in_pos
 	
-	for agent_tiger in agent_list
-		energy_get = min(
-				energy_1_tiger,
-				params.energy_transfert[agent_tiger.species],
-				params.max_energy[agent_tiger.species] - agent_tiger.energy)
-		agent_tiger.energy += energy_get
-	end
+	energy_get = min(
+			# prey.energy,
+			params.energy_transfert[agent.species],
+			params.max_energy[agent.species] - agent.energy)
+	agent.energy += energy_get
 end
 
 
 function eat_prey!(agent,prey, model, ::Val{:leopard})
 	params=model.params
-	if rand(model.rng,Uniform(0, 1)) < model.params.catch_prob[agent.species]
+	catch_prob= 1-prey.energy*0.8 
+	if rand(model.rng) < model.params.catch_prob[agent.species]
 		energy_get = min(
-				prey.energy,
+				# prey.energy,
 				params.energy_transfert[agent.species],
 				params.max_energy[agent.species] - agent.energy)
 		agent.energy += energy_get

@@ -34,9 +34,10 @@ for i in 1:max_num_data
 	model, agent_step!, model_step! = let
 		params = Model.ModelParams(
 			grid_size=(50, 50),
-			num_init_tiger=20,
-			num_init_leopard=25,
-			num_init_boar=500
+			num_init_tiger=50,
+			num_init_leopard=50,
+			num_init_boar=200,
+			map="./map/map_001.png"
 		)
 		Model.init_model(params)
 	end
@@ -58,7 +59,7 @@ for i in 1:max_num_data
 	using CSV
 	num=parse(Int64, (open(f->read(f, String), "./data_num.txt")))
 
-	csv_path=string("./data/data_v1_",string(num, pad=3),".csv")
+	csv_path=string("./data/v9/data_",string(num, pad=3),".csv")
 	CSV.write(csv_path, adata)
 
 	open("./data_num.txt", "w") do io

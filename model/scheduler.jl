@@ -12,14 +12,15 @@ end
 
 function model_step!(model)
 	params = model.params
-	@. model.food = min(model.food + params.grow_speed, params.max_food)
+	# @. model.food = min(model.food + params.grow_speed, params.max_food)
+	@. model.food = min(model.food + model.mask * params.grow_speed, params.max_food)
 	model.step_num +=1
 	# print("Hết bước ", model.step_num)
 	# print("==================================\n")
 
 	model.count_species = count_species(model)
 
-	model.fight_prob= (model.count_species[:leopard]+1)/(model.count_species[:leopard] + model.count_species[:tiger] + 1)
+	# model.fight_prob= (model.count_species[:leopard]+1)/(model.count_species[:leopard] + model.count_species[:tiger] + 1)
 end
 
 function boar_scheduler(model::ABM)
@@ -41,6 +42,22 @@ end
 
 
 function complex_step!(model)
+
+	# for id in boar_scheduler(model)
+		
+	# 	agent_reproduce!(model[id], model)
+    # end
+  
+	# for id in tiger_scheduler(model)
+    #     agent_reproduce!(model[id], model)
+    # end
+	
+	# for id in leopard_scheduler(model)
+	# 	agent_reproduce!(model[id], model)
+    # end
+
+
+    
     for id in boar_scheduler(model)
 		
 		agent_reproduce!(model[id], model)

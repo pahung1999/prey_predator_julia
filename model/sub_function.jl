@@ -29,6 +29,7 @@ end
 
 #Lấy random vị trí có giá trị lớn nhất
 function get_random_max_pos(dict_count,model)
+    
 	max_value,pos = findmax(dict_count)
 	pos_list=[k for (k,v) in dict_count if v==max_value]
 	return max_value, rand(model.rng,pos_list)

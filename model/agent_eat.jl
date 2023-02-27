@@ -10,13 +10,10 @@ end
 
 function agent_eat!(agent, model, ::Val{:leopard})
 	# Walk
-	if agent.energy <= model.params.max_energy[agent.species]*0.8
-		if random_prey(agent.pos , :tiger, model) ==0  || agent.energy <= model.params.max_energy[agent.species]*0.3
-			agent_prey= random_prey(agent.pos , :boar, model)
-			if agent_prey !=0
-				eat_prey!(agent,agent_prey, model, Val(agent.species))
-			end
-		end
+
+	agent_prey= random_prey(agent.pos , :boar, model)
+	if agent_prey !=0
+		eat_prey!(agent,agent_prey, model, Val(agent.species))
 	end
 	return
 	
@@ -24,16 +21,12 @@ end
 
 function agent_eat!(agent, model, ::Val{:tiger})
 	
-	if agent.energy <= model.params.max_energy[agent.species]*0.8
-		agent_prey= random_prey(agent.pos , :boar, model)
-		if agent_prey == 0
-			agent_prey= random_prey(agent.pos , :leopard, model)
-		end
-		if agent_prey !=0
-			eat_prey!(agent,agent_prey, model, Val(agent.species))
-		end
-	else
-		return
+	agent_prey= random_prey(agent.pos , :boar, model)
+	if agent_prey == 0
+		agent_prey= random_prey(agent.pos , :leopard, model)
+	end
+	if agent_prey !=0
+		eat_prey!(agent,agent_prey, model, Val(agent.species))
 	end
 end
 	

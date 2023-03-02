@@ -1,3 +1,9 @@
+#Hàm kiểm tra số lượng 1 loài trong ô bất kì 
+function animal_in_pos_num(pos, species, model)
+    species_num=count(agent -> agent.species==species ,agents_in_position(pos,model))
+    return species_num
+end
+
 # Hàm lọc ra những pos có số loài A nhỏ hoặc lớn hơn giá trị max_count nào đó từ tập pos_list cho trước 
 function pos_filter(pos_list, species, max_count, filter_type , model)
     function f1(pos)

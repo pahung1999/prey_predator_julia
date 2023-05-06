@@ -28,19 +28,22 @@ const tiger = IsSpecies(:tiger)
 
 # const scheduler= Agents.Schedulers.Randomly()
 
+
 max_num_data=50
 for i in 1:max_num_data
 	print("Lượt mô phỏng thứ: ",i,"\n")
+
 	model, agent_step!, model_step! = let
 		params = Model.ModelParams(
 			grid_size=(50, 50),
-			num_init_tiger=20,
+			num_init_tiger=25,
 			num_init_leopard=25,
 			num_init_boar=500,
-			map="./map/map_307.PNG"
+			map="./map/map_001.png"
 		)
 		Model.init_model(params)
 	end
+
 	adata = let
 		tiger = agent -> agent.species == :tiger
 		boar = agent -> agent.species == :boar
@@ -51,15 +54,16 @@ for i in 1:max_num_data
 			(leopard, count)
 		]
 	end
+	
 	alabels = ["count_tiger", "count_boar", "count_leopard"]
-	steps=10000
+	steps=5000
 	adata, mdata = run!(model, agent_step!, model_step!, steps; adata=adata, mdata=[healthy_food])
 	# print(adata)
 
 	using CSV
 	num=parse(Int64, (open(f->read(f, String), "./data_num.txt")))
 
-	csv_path=string("./data/v5/data_",string(num, pad=3),".csv")
+	csv_path=string("./data/05/data_",string(num, pad=3),".csv")
 	CSV.write(csv_path, adata)
 
 	open("./data_num.txt", "w") do io

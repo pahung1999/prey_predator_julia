@@ -6,13 +6,13 @@ using Distributions
 
 const LIST_SPECIES= (:tiger, :leopard, :boar)
 
-const DEFAULT_MAX_ENERGY= Dict(		   :boar => 0.6,     :tiger => 1.0,      :leopard => 0.8) 
-const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.15,    :tiger => 0.5,      :leopard => 0.4)
-const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.015,   :tiger => 0.02,    :leopard => 0.016)
-const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.01,    :tiger => 0.005,    :leopard => 0.005)
-const MAX_OFFSPRING =      Dict(       :boar => 6,       :tiger => 2  ,      :leopard => 4)
-const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.3,     :tiger => 0.5,      :leopard => 0.4)
-const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.3,     :leopard => 0.35)
+const DEFAULT_MAX_ENERGY= Dict(		   :boar => 1.0,     :tiger => 1.0,      :leopard => 1.0) 
+const DEFAULT_ENERGY_TRANSFERT = Dict( :boar => 0.255,    :tiger => 0.5,      :leopard => 0.15)
+const DEFAULT_ENERGY_CONSUME = Dict(   :boar => 0.015,   :tiger => 0.03,    :leopard => 0.009)
+const DEFAULT_REPRODUCE_PROBA= Dict(   :boar => 0.0036,    :tiger => 0.0015,    :leopard => 0.0017)
+const MAX_OFFSPRING =      Dict(       :boar => 12,       :tiger => 6  ,      :leopard => 4)
+const DEFAULT_REPRODUCE_ENERGY= Dict(  :boar => 0.6,     :tiger => 0.6,      :leopard => 0.6)
+const DEFAULT_CATCH_PROB = Dict(         	 	 	     :tiger => 0.6,     :leopard => 0.3)
 const DEFAULT_LIFESPAN = Dict(  	   :boar =>(12*365), :tiger => (15*365), :leopard => (14*365))
 
 # Dữ liệu gốc

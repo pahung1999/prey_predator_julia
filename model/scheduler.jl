@@ -40,21 +40,7 @@ function leopard_scheduler(model::ABM)
 end
 
 
-
 function complex_step!(model)
-
-	# for id in boar_scheduler(model)
-		
-	# 	agent_reproduce!(model[id], model)
-    # end
-  
-	# for id in tiger_scheduler(model)
-    #     agent_reproduce!(model[id], model)
-    # end
-	
-	# for id in leopard_scheduler(model)
-	# 	agent_reproduce!(model[id], model)
-    # end
 
 
     
@@ -91,44 +77,8 @@ function complex_step!(model)
     
 	
 
-
-    # model_step!(model)
-
-
-	# for id in boar_scheduler(model)
-    #     agent_reproduce!(model[id], model)
-    # end
-	# for id in boar_scheduler(model)
-    #     agent_eat!(model[id], model)
-    # end
-	# for id in boar_scheduler(model)
-	# 	agent_move!(model[id], model)
-    # end
-	
-
-	# for id in leopard_scheduler(model)
-    #     agent_reproduce!(model[id], model)
-    # end
-	# for id in leopard_scheduler(model)
-    #     agent_eat!(model[id], model)
-    # end
-	# for id in leopard_scheduler(model)
-	# 	agent_move!(model[id], model)
-    # end
-
-    
-	# for id in tiger_scheduler(model)
-    #     agent_reproduce!(model[id], model)
-    # end
-	# for id in tiger_scheduler(model)
-    #     agent_eat!(model[id], model)
-    # end
-
-	# for id in tiger_scheduler(model)
-	# 	agent_move!(model[id], model)
-    # end
-
 	model_step!(model)
+
 
 end
 

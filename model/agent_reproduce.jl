@@ -15,6 +15,7 @@ function agent_reproduce!(agent::Animal, model)
 		# print(" Đến nghĩa địa vì đói \n")
 		# kill_agent!(agent, model)
 		kill_an_agent!(agent, model)
+        model.death_hun[species]+=1
         return
 	end
 
@@ -25,6 +26,7 @@ function agent_reproduce!(agent::Animal, model)
 		# print(" Đến nghĩa địa vì già \n")
 		# kill_agent!(agent, model)
 		kill_an_agent!(agent, model)
+        model.death_old[species]+=1
 		return
 	end
     
@@ -37,6 +39,7 @@ function agent_reproduce!(agent::Animal, model)
             pos = agent.pos
             
             add_agent!(animal(id, pos,species,energy_child), model)
+            model.born_count[species]+=1
         end
         agent.energy=energy_child
         # print("ĐẺ")

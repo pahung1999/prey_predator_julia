@@ -13,10 +13,12 @@ function (ac::AgentColor)(agent)
     
     if isnan(model.food[x, y])
         RGBAf(0.0f0, 0.0f0, 0.0f0)
-    elseif agent.age < model.params.lifespan[agent.species]
-        RGBAf(0.0f0, 0.0f0, 1.0f0)
-    else
+    elseif agent.species == :tiger
         RGBAf(1.0f0, 0.0f0, 0.0f0)
+    elseif agent.species == :boar
+        RGBAf(0.49f0, 0.235f0, 0.49f0)
+    elseif agent.species == :leopard
+        RGBAf(0.0f0, 0.0f0, 1.0f0)
     end
 end
 

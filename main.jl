@@ -5,6 +5,7 @@ using Agents
 using InteractiveDynamics
 using GLMakie
 
+
 include("./model/model.jl")
 include("./visualize.jl")
 
@@ -35,7 +36,8 @@ model, agent_step!, model_step! = let
 		num_init_tiger=50,
 		num_init_leopard=50,
 		num_init_boar=200,
-		map="./map/map_001.png"
+		map="./map/ver04/grow_diff_01.png",
+		
 	)
 	Model.init_model(params)
 end

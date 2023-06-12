@@ -27,12 +27,14 @@ function eat_prey!(agent,prey, model, ::Val{:tiger})
         if agent.energy < 0.3 && rand(model.rng) < model.fight_prob
             tiger_eat_prey!(agent,prey,model)
 			kill_an_agent!(prey, model)
+			model.death_eat[prey.species]+=1
         end
         return
     else
 		if rand(model.rng) < model.params.catch_prob[agent.species]
             tiger_eat_prey!(agent,prey,model)
 			kill_an_agent!(prey, model)
+			model.death_eat[prey.species]+=1
         end
 		return
 	end
@@ -59,6 +61,7 @@ function eat_prey!(agent,prey, model, ::Val{:leopard})
 				params.max_energy[agent.species] - agent.energy)
 		agent.energy += energy_get
 		kill_an_agent!(prey, model)
+		model.death_eat[prey.species]+=1
 	end
 	return
 end
